@@ -75,6 +75,9 @@ def read_config():
 
 if __name__ == "__main__":
     logging.debug("PC - INICIO")
-    read_config()
+    try:
+        read_config()
+    except Exception as e:
+        logging.debug(f"PC - ERROR: {e}")
     logging.debug(f"PC - TOTAL DE BYTES LIDOS - {totalB}")
     logging.debug("PC - FIM")

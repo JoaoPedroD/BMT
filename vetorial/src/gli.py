@@ -35,7 +35,6 @@ def read_LEIA(f: str):
     totalB+=len(arq)
     doc = minidom.parseString(arq)
     for r in doc.getElementsByTagName("RECORD"):
-        # logging.debug(recnum)
         abst = r.getElementsByTagName("ABSTRACT")
         
         if not len(abst):
@@ -43,6 +42,7 @@ def read_LEIA(f: str):
         if len(abst) == 0: continue
         
         recnum = r.getElementsByTagName("RECORDNUM")[0].firstChild.nodeValue
+        # logging.debug(recnum)
         
         for a in abst:
             for i in a.childNodes:
@@ -72,6 +72,9 @@ def read_config():
 
 if __name__ == "__main__":
     logging.debug("GLI - INICIO")
-    read_config()
+    try:
+        read_config()
+    except Exception as e:
+        logging.debug(f"GLI - ERROR: {e}")
     logging.debug(f"GLI - TOTAL DE BYTES LIDOS - {totalB}")
     logging.debug("GLI - FIM")

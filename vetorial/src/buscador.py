@@ -108,6 +108,9 @@ def read_config():
 
 if __name__ == "__main__":
     logging.debug("BUSCADOR - INICIO")
-    read_config()
+    try:
+        read_config()
+    except Exception as e:
+        logging.debug(f"BUSCADOR - ERROR: {e}")
     logging.debug(f"BUSCADOR - TOTAL DE BYTES LIDOS - {totalB}")
     logging.debug("BUSCADOR - FIM")

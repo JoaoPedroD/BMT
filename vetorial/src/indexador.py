@@ -7,15 +7,6 @@ totalB = 0
 
 logging.basicConfig(level=logging.DEBUG) # logging.DEBUG
 
-def get_unique_words(f: dict) -> set:
-    logging.debug("IDX - get_unique_words - IN")
-    palavras = set()
-    for i in f:
-        for j in f[i]:
-            palavras.add(j)
-    logging.debug("IDX - get_unique_words - OUT")
-    return palavras
-
 def cada_documento(linhas: list) -> dict:
     logging.debug("IDX - cada_documento - IN")
     documentos = {}
@@ -53,7 +44,6 @@ def cada_palavra_documento(linhas: list) -> dict:
     logging.debug("IDX - cada_palavra_documento - OUT")
     return documentos
 
-
 def contar_documentos(linhas: list) -> int:
     logging.debug("IDX - contar_documentos - IN")
     documentos = set()
@@ -83,7 +73,7 @@ def calc_idf(N: int, linhas: list) -> dict:
     logging.debug("IDX - calc_idf - OUT")
     return idf
 
-def calc_w(tf: dict, idf: dict):
+def calc_w(tf: dict, idf: dict) -> dict:
     logging.debug("IDX - calc_w - IN")
     w = {}
     for i in idf:
@@ -145,6 +135,9 @@ def read_config():
 
 if __name__ == "__main__":
     logging.debug("IDX - INICIO")
-    read_config()
+    try:
+        read_config()
+    except Exception as e:
+        logging.debug(f"IDX - ERROR: {e}")
     logging.debug(f"IDX - TOTAL DE BYTES LIDOS - {totalB}")
     logging.debug("IDX - FIM")

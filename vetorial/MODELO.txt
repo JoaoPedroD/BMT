@@ -1,0 +1,4 @@
+O modelo foi construido de acordo com a descrição do trabalho.
+Na etapa INDEXADOR foi feita a normalização do tf. 
+No final do processamento para o modelo, obtivemos como saída uma matriz (palavraXarquivo), que foi 
+feita a partir do tfidf de cada palavra em cada arquivo. A matriz foi armazenada com o dict do Python
