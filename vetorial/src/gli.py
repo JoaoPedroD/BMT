@@ -26,7 +26,12 @@ def read_LEIA(f: str):
     logging.debug("GLI - read_LEIA - IN")
     logging.debug("GLI - read_LEIA - Leitura do arquivo LEIA")
     global totalB
-    arq = open(f, "r").read()
+    try:
+        arq = open(f, "r").read()
+    except Exception as e:
+        logging.debug(f"GLI - read_LEIA - Não foi possiver abrir o arquivo {f}")
+        logging.debug(f"GLI - read_LEIA - ERROR: {e}")
+        return
     totalB+=len(arq)
     doc = minidom.parseString(arq)
     for r in doc.getElementsByTagName("RECORD"):
