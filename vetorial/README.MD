@@ -4,7 +4,7 @@ Implementação do modelo vetorial para o trabalho de BMT
 
 ## Getting Started
 
-Essas instruções fornecerão instrução para uso do código entregue.
+Essas instruções fornecerão uma cópia do projeto e instrução para uso do código entregue.
 
 ### Pré-requisito
 
@@ -29,3 +29,7 @@ comando(Lembrar de permitir a execução do script):
 ```sh
 ./run.sh
 ```
+
+## Autor
+
+  - **João Pedro**
