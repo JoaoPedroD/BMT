@@ -13,7 +13,6 @@ O programa foi feito com Python versão 3.8
 Neste trabalho foram utilizadas as seguintes libs da linguagem Python:
 - logging
 - math
-- numpy
 - nltk
 - re
 - time

@@ -1,7 +1,6 @@
 import re
 import time
 import unidecode
-import numpy as np
 from math import sqrt
 from nltk.tokenize import word_tokenize
 
@@ -54,12 +53,12 @@ def realizar_consultas(consultas: str, modelo: dict) -> dict:
         resultado[id] = {key: val for key, val in sorted(resultado[id].items(), key = lambda ele: ele[1], reverse = True)}
         tempo.append(time.time() - start)
     f.close()
-    logging.debug(f"BUSCADOR - realizar_consultas - Tempo medio das consultas {np.mean(tempo)}")
-    logging.debug(f"BUSCADOR - realizar_consultas - Tempo total das consultas {np.sum(tempo)}")
-    logging.debug(f"BUSCADOR - realizar_consultas - Tempo medio das palavras {np.mean(tempop)}")
-    logging.debug(f"BUSCADOR - realizar_consultas - Tempo total das palavras {np.sum(tempop)}")
-    logging.debug(f"BUSCADOR - realizar_consultas - Tempo medio dos documentos {np.mean(tempod)}")
-    logging.debug(f"BUSCADOR - realizar_consultas - Tempo total dos documentos {np.sum(tempod)}")
+    logging.debug(f"BUSCADOR - realizar_consultas - Tempo total das consultas {sum(tempo)/len(tempo)}")
+    logging.debug(f"BUSCADOR - realizar_consultas - Tempo total das consultas {sum(tempo)}")
+    logging.debug(f"BUSCADOR - realizar_consultas - Tempo medio das palavras {sum(tempop)/len(tempop)}")
+    logging.debug(f"BUSCADOR - realizar_consultas - Tempo total das palavras {sum(tempop)}")
+    logging.debug(f"BUSCADOR - realizar_consultas - Tempo medio dos documentos {sum(tempod)/len(tempod)}")
+    logging.debug(f"BUSCADOR - realizar_consultas - Tempo total dos documentos {sum(tempod)}")
     logging.debug("BUSCADOR - realizar_consultas - OUT")
     return resultado
 
