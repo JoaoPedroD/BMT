@@ -58,8 +58,8 @@ def realizar_consultas(consultas: str, modelo: dict) -> dict:
     logging.debug(f"BUSCADOR - realizar_consultas - Tempo total das consultas {np.sum(tempo)}")
     logging.debug(f"BUSCADOR - realizar_consultas - Tempo medio das palavras {np.mean(tempop)}")
     logging.debug(f"BUSCADOR - realizar_consultas - Tempo total das palavras {np.sum(tempop)}")
-    logging.debug(f"BUSCADOR - realizar_consultas - Tempo medio das documentos {np.mean(tempod)}")
-    logging.debug(f"BUSCADOR - realizar_consultas - Tempo total das documentos {np.sum(tempod)}")
+    logging.debug(f"BUSCADOR - realizar_consultas - Tempo medio dos documentos {np.mean(tempod)}")
+    logging.debug(f"BUSCADOR - realizar_consultas - Tempo total dos documentos {np.sum(tempod)}")
     logging.debug("BUSCADOR - realizar_consultas - OUT")
     return resultado
 
