@@ -55,10 +55,10 @@ O resultado do sistema sem o stemmer foi 0.24728568965326742, já o resultado do
 
 Os gráficos a seguir correspondem ao Discounted Cumulative Gain (médio) do sistema sem a ultilização do stemming e com a ultilização do stemming, respectivamente.
 
-<img src='./dcg-nostemmer-2.png'>
+<img src='./dcg-NOSTEMMER-2.png'>
 
 
-<img src='./dcg-stemmer-1.png'>
+<img src='./dcg-STEMMER-1.png'>
 
 O gráfico do resultado do sistema que utiliza o stemmer, apresentou um DCG maior que o resultado do sistema que utiliza o stemmer para os 10 primeiros documentos. Logo, o sistema que faz stemming retornou ao usuario um ranking dos 10 primeiros documentos melhor que o sistema que não faz stemming
 
