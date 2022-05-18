@@ -1,9 +1,11 @@
 from math import log
 import re
-
+from nltk.stem import PorterStemmer
 import logging
 
 totalB = 0
+
+stemming = False
 
 logging.basicConfig(level=logging.DEBUG) # logging.DEBUG
 
@@ -21,11 +23,12 @@ def cada_documento(linhas: list) -> dict:
     logging.debug("IDX - cada_documento - OUT")
     return documentos
 
-def cada_palavra_documento(linhas: list) -> dict:
+def cada_palavra_documento(linhas: list, useStemmer: bool) -> dict:
     logging.debug("IDX - cada_palavra_documento - IN")
     documentos = {}
     global totalB
     pattern = re.compile("[A-Z]{2,}")
+    if useStemmer: ps = PorterStemmer()
     for l in linhas:
         totalB+=len(l)
         aux = l.split(";")
@@ -33,6 +36,7 @@ def cada_palavra_documento(linhas: list) -> dict:
         for d in docs:
             saux = aux[0].strip()
             if len(saux) < 2 or pattern.fullmatch(saux) is None: continue
+            if useStemmer: saux = ps.stem(saux).upper()
             if d in documentos:
                 if saux in documentos[d]:
                     documentos[d][saux]+=1
@@ -60,14 +64,16 @@ def calc_tf(f: dict) -> dict:
     logging.debug("IDX - calc_tf - OUT")
     return f
 
-def calc_idf(N: int, linhas: list) -> dict:
+def calc_idf(N: int, linhas: list, useStemmer: bool) -> dict:
     logging.debug("IDX - calc_idf - IN")
     idf = {}
     pattern = re.compile("[A-Z]{2,}")
+    if useStemmer: ps = PorterStemmer()
     for l in linhas:
         aux = l.split(";")
         saux = aux[0].strip()
         if len(saux) < 2 or pattern.fullmatch(saux) is None: continue
+        if useStemmer: saux = ps.stem(saux).upper()
         ni = len(sorted(set(eval(aux[1]))))
         idf[saux] = log(N/ni, 10)
     logging.debug("IDX - calc_idf - OUT")
@@ -81,9 +87,11 @@ def calc_w(tf: dict, idf: dict) -> dict:
             if i not in w: w[i] = {}
             # w[i]["__idf__"] = idf[i]
             if i in tf[t]:
+                # w[i][t] = tf[t][i]
                 # w[i][t] = (tf[t][i]*idf[i], tf[t][i])
                 w[i][t] = tf[t][i]*idf[i]
             else:
+                # w[i][t] = 0
                 # w[i][t] = (0*idf[i], 0)
                 w[i][t] = 0*idf[i]
     logging.debug("IDX - calc_w - OUT")
@@ -95,23 +103,24 @@ def read_LEIA(f: str):
     f = open(f"./result/{f}", "r")
     linhas = f.readlines()
     
-    f = cada_palavra_documento(linhas)
-    
+    useStemmer = stemming
+    logging.debug(f"useStemmer = {useStemmer} | type = {type(useStemmer)}")
+    f = cada_palavra_documento(linhas, useStemmer)
     tf = calc_tf(f)
     
     N = contar_documentos(linhas)
     
-    idf = calc_idf(N, linhas)
+    idf = calc_idf(N, linhas, useStemmer)
     
     w = calc_w(tf, idf)
     
     logging.debug("IDX - read_LEIA - OUT")
-    return w    
+    return w
 
 def escreva(nome: str, w: dict):
     logging.debug("IDX - escreva - IN")
     logging.debug("IDX - read_LEIA - Leitura do arquivo ESCREVA")
-    f = open(f"./result/{nome}", "w")
+    f = open(f"./result/{nome}-{'STEMMER' if stemming else 'NOSTEMMER'}", "w")
     f.write(re.sub("[ ]+","",str(w)))
     f.close()
     logging.debug("IDX - escreva - OUT")
@@ -123,10 +132,15 @@ def read_config():
     logging.debug("IDX - read_config - Leitura do arquivo de configuração")
     f = open("./config/INDEX.CFG", "r")
     w = None
+    global stemming
     for linha in f.readlines():
         totalB+=len(linha)
         l = linha.split("=")
-        if l[0] == "LEIA":
+        if l[0].strip() == "STEMMER":
+            stemming = True
+        elif l[0].strip() == "NOSTEMMER":
+            stemming = False
+        elif l[0] == "LEIA":
             w = read_LEIA(l[1].strip())
         elif l[0] == "ESCREVA":
             escreva(l[1].strip(), w)

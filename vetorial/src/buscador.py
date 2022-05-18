@@ -38,9 +38,12 @@ def realizar_consultas(consultas: str, modelo: dict) -> dict:
                         startd = time.time()
                         if j == "__idf__": continue
                         if j not in numerador: numerador[j] = 0
+                        # w_palavra = 1# (0.5+(0.5*modelo[c][j]))*modelo[c]["__idf__"]
+                        # numerador[j]+=(modelo[c][j]*modelo[c]["__idf__"])*w_palavra
                         numerador[j]+=modelo[c][j]
                         if j not in denominadora: denominadora[j] = 0
                         if j not in denominadorb: denominadorb[j] = 0
+                        # denominadora[j]+=(modelo[c][j]*modelo[c]["__idf__"])*(modelo[c][j]*modelo[c]["__idf__"])
                         denominadora[j]+=modelo[c][j]*modelo[c][j]
                         denominadorb[j]+=1*1
                         tempod.append(time.time() - startd)

@@ -1,3 +1,5 @@
+from nltk.tokenize import word_tokenize
+from nltk.stem import PorterStemmer
 from xml.dom import minidom
 import unidecode
 import re
@@ -6,6 +8,7 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG) # logging.DEBUG
 
+stemming = False
 totalB = 0
 
 consul = {}
@@ -46,21 +49,31 @@ def read_config():
     logging.debug("PC - read_config - Leitura do arquivo de configuração")
     f = open("./config/PC.CFG", "r")
     linha = f.readlines()
-    totalB+=len(linha[0])
-    leia = linha[0].strip().split("=")[1]
-    read_LEIA(leia)
+    global stemming
+    if linha[0].strip() == "STEMMER":
+        stemming = True
+    elif linha[0].strip() == "NOSTEMMER":
+        stemming = False
     
     totalB+=len(linha[1])
-    consultas = linha[1].strip().split("=")[1]
-    logging.debug("PC - read_config - Leitura do arquivo CONSULTAS")
-    saida = open(f"./result/{consultas}", "w")
-    saida.write("QueryNumber;QueryText\n")
-    for c in consul.items():
-        saida.write(f"{c[0]};{c[1]}\n")
-    saida.close()
+    leia = linha[1].strip().split("=")[1]
+    read_LEIA(leia)
     
     totalB+=len(linha[2])
-    esperados = linha[2].strip().split("=")[1]
+    consultas = linha[2].strip().split("=")[1].split(".")
+    logging.debug("PC - read_config - Leitura do arquivo CONSULTAS")
+    saida = open(f"./result/{consultas[0]}-{'STEMMER' if stemming else 'NOSTEMMER'}.{consultas[1]}", "w")
+    saida.write("QueryNumber;QueryText\n")
+    ps = PorterStemmer()
+    for c in consul.items():
+        if stemming:
+            saida.write(f"{c[0]};{' '.join([ps.stem(c).upper() for c in word_tokenize(c[1])])}\n")
+        else:
+            saida.write(f"{c[0]};{c[1]}\n")
+    saida.close()
+    
+    totalB+=len(linha[3])
+    esperados = linha[3].strip().split("=")[1]
     logging.debug("PC - read_config - Leitura do arquivo ESPERADOS")
     saida = open(f"./result/{esperados}", "w")
     saida.write("QueryNumber;DocNumber;DocVotes\n")

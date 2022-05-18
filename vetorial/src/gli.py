@@ -1,4 +1,5 @@
 from nltk.tokenize import word_tokenize
+from nltk.stem import PorterStemmer
 from xml.dom import minidom
 import unidecode
 
@@ -9,10 +10,15 @@ logging.basicConfig(level=logging.DEBUG) # logging.DEBUG
 gli = {}
 totalB = 0
 
+stemming = False
+
 def gera_lista(renum: str, data: str):
     # logging.info("GLI - gera_lista - IN")
+    global stemming
+    if stemming: ps = PorterStemmer()
     for p in word_tokenize(data):
         if p == ";": continue
+        if stemming: p = ps.stem(p).upper()
         p = unidecode.unidecode(p.upper())
         if p in gli:
             gli[p].append(renum.strip())
@@ -39,6 +45,8 @@ def read_LEIA(f: str):
         
         if not len(abst):
             abst = r.getElementsByTagName("EXTRACT")
+        if not len(abst):
+            abst = r.getElementsByTagName("TITLE")
         if len(abst) == 0: continue
         
         recnum = r.getElementsByTagName("RECORDNUM")[0].firstChild.nodeValue
@@ -55,13 +63,19 @@ def read_config():
     logging.debug("GLI - read_config - Leitura do arquivo de configuração")
     f = open("./config/GLI.CFG", "r")
     global totalB
+    global stemming
     for linha in f.readlines():
         totalB+=len(linha)
         l = linha.split("=")
-        if l[0] == "LEIA":
+        if l[0].strip() == "STEMMER":
+            stemming = True
+        elif l[0].strip() == "NOSTEMMER":
+            stemming = False
+        elif l[0] == "LEIA":
             read_LEIA(l[1].strip())
         elif l[0] == "ESCREVA":
-            saida = open(f"./result/{l[1].strip()}","w")
+            l = l[1].strip().split(".")
+            saida = open(f"./result/{l[0].strip()}-{'STEMMER' if stemming else 'NOSTEMMER'}.{l[1]}","w")
             for g in gli.items():
                 lista = list(g[1])
                 lista.sort()
